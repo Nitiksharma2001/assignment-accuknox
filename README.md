@@ -1,3 +1,11 @@
+<h1>React Vite Typescript Project</h1>
+  <h3>live link: <a href="https://assignment-accuknox.vercel.app/">https://assignment-accuknox.vercel.app/</a></h3>
+  <h3>
+    installation using below commands
+  </h3>
+  <div>1. <code>yarn</code></div>
+  <div>2. <code>yarn install</code></div>
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -28,3 +36,5 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+<h4>live link: https://assignment-accuknox.vercel.app/?searchText=</h4>
