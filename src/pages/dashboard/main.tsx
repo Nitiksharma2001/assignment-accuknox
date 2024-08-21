@@ -6,6 +6,7 @@ import CategoriesSidebar from '../../components/sidebar/categoriesSidebar'
 import { CategoryType } from '../../types/category'
 import { CiSearch } from 'react-icons/ci'
 import AddWidgetModal from '../../components/modal/addWidgetModal'
+import JSONModal from '../../components/modal/jsonSchema'
 
 interface SelectedCheckedWidgetsType {
   categoryId: string
@@ -16,26 +17,36 @@ export default function Main() {
   const [categories, setCategories] = useState<CategoryType[]>([
     {
       id: uuidv4(),
-      category: 'category 1',
+      category: 'CSPM Executive Board',
       widgets: [
         {
           id: uuidv4(),
-          text: 'widget 11',
-          status: 'connceted',
+          text: 'Cloud Account',
+          status: 'connected',
+        },{
+          id: uuidv4(),
+          text: 'Cloud Account Risk Managment',
+          status: 'connected',
         },
       ],
     },
     {
       id: uuidv4(),
-      category: 'category 2',
+      category: 'CWPP Dashboard',
       widgets: [
         {
           id: uuidv4(),
-          text: 'widget 21',
-          status: 'connceted',
+          text: 'Top 5 Namespace Specific Alert',
+          status: 'connected',
         },
       ],
     },
+    {
+      id: uuidv4(),
+      category: 'Risk Managment',
+      widgets: [],
+    },
+    
   ])
 
   const [searchText, setSearchText] = useState(searchParams.get('searchText') || '')
@@ -44,6 +55,7 @@ export default function Main() {
   const [selectedCheckedWidgets, setSelectedCheckedWidgets] = useState<
     SelectedCheckedWidgetsType[]
   >([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const localCategories = localStorage.getItem('categories')
@@ -56,6 +68,9 @@ export default function Main() {
     setSearchParams('?searchText=' + searchText)
   }, [searchText, selectedCheckedWidgets])
 
+  function toggleModal() {
+    setIsModalOpen(!isModalOpen)
+  }
   function updateCheckedWidgets(categoryId: string, updatedList: string[]) {
     const newList = [...selectedCheckedWidgets]
     const isExists = newList.find((slw) => slw.categoryId === categoryId)
@@ -71,6 +86,11 @@ export default function Main() {
   }
   function toggleSidebar() {
     setIsSidebarOpen(!isSidebarOpen)
+  }
+
+  function updateCategories(schema: string) {
+    setCategories(JSON.parse(schema) as CategoryType[])
+    toggleModal()
   }
   const addWidget = (
     categoryId: string,
@@ -109,17 +129,21 @@ export default function Main() {
 
     return updatedCategories.map((ctg) => {
       const widgetList = selectedCheckedWidgets.find((category) => ctg.id === category.categoryId)
-      return {...ctg, widgets: ctg.widgets.filter(widget => widgetList?.widgets.includes(widget.id) ?? true)}
+      return {
+        ...ctg,
+        widgets: ctg.widgets.filter((widget) => widgetList?.widgets.includes(widget.id) ?? true),
+      }
     })
   }
 
   return (
     <>
-      <div className='flex justify-end gap-4 items-center py-4 px-4'>
+      <div className='flex gap-4 items-center py-4 px-4'>
         <DashboardHeader
           toggleSidebar={toggleSidebar}
           searchText={searchText}
           setSearchText={setSearchText}
+          toggleModal={toggleModal}
         />
       </div>
       <div className='px-10 flex flex-col gap-4'>
@@ -131,14 +155,23 @@ export default function Main() {
         />
       </div>
       {isSidebarOpen && (
-        <div className='h-full p-2 flex flex-col justify-between items-end absolute right-0 top-0 w-1/4 bg-base-200'>
-          <CategoriesSidebar categories={categories} updateCheckedWidgets={updateCheckedWidgets} />
+        <div className='w-full flex justify-end h-screen fixed bg-opacity-50 bg-black top-0 z-50'>
+          <CategoriesSidebar
+            toggleSidebar={toggleSidebar}
+            categories={categories}
+            updateCheckedWidgets={updateCheckedWidgets}
+          />
         </div>
       )}
       <AddWidgetModal
         categoryId={currentCategoryId}
         updateCategoryId={updateCategoryId}
         addWidget={addWidget}
+      />
+      <JSONModal
+        isModalOpen={isModalOpen}
+        toggleModal={toggleModal}
+        updateCategories={updateCategories}
       />
     </>
   )
@@ -148,17 +181,19 @@ function DashboardHeader({
   searchText,
   setSearchText,
   toggleSidebar,
+  toggleModal,
 }: {
   searchText: string
   setSearchText: React.Dispatch<React.SetStateAction<string>>
   toggleSidebar: () => void
+  toggleModal: () => void
 }) {
   return (
     <>
-      <button className='btn' onClick={toggleSidebar}>
+      <button className='btn btn-info text-white' onClick={toggleSidebar}>
         Add widget
       </button>
-      <label className='input input-bordered flex items-center gap-2 w-1/3'>
+      <label className='input bg-blue-50 border-2 input-bordered flex items-center gap-2 w-1/3'>
         <input
           type='text'
           className='grow'
@@ -168,6 +203,9 @@ function DashboardHeader({
         />
         <CiSearch />
       </label>
+      <button className='btn btn-info text-white' onClick={toggleModal}>
+        Add JSON
+      </button>
     </>
   )
 }

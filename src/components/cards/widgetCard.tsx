@@ -7,14 +7,13 @@ Chart.register(ArcElement, Tooltip, Legend)
 const chartOptions = {
   plugins: {
     chart: {
-      heigt: '90%'
-
+      heigt: '90%',
     },
     legend: {
       display: false,
     },
   },
-};
+}
 
 export default function WidgetCard({ widget }: { widget: WidgetType }) {
   const cloudAccountsData = {
@@ -31,11 +30,13 @@ export default function WidgetCard({ widget }: { widget: WidgetType }) {
 
   return (
     <>
-      <div className='card card-side h-full bg-base-100 shadow-xl'>
-        <div className='card-body'>
-          <h2 className='card-title'>{widget.text}</h2>
-          <div className='flex gap-16'>
-            {/* <Doughnut options={chartOptions} data={cloudAccountsData} /> */}
+      <div className='card card-side h-full bg-white shadow-xl w-[400px]'>
+        <div className='card-body justify-center '>
+          <h2 className='card-title -translate-y-4'>{widget.text}</h2>
+          <div className='flex items-center justify-between h-[90%]'>
+            <div className='h-20 w-40'>
+              <Doughnut options={chartOptions} data={cloudAccountsData} />
+            </div>
             <p className='font-semibold text-xl'>{widget.status}</p>
           </div>
         </div>
